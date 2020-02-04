@@ -29,7 +29,7 @@ def calculate_field(items, position):
             vector = position.subtract(item.position)
         else:
             vector = item.position.subtract(position)
-        magnitude = K_CONSTANT * item.magnitude / (vector.get_magnitude() ** 2)
+        magnitude = K_CONSTANT * item.magnitude / (vector.get_magnitude() ** 2) #E=kg/r^2
         angle = vector.get_angle()
 
         net_field = net_field.add(Vector.create(magnitude, angle))
@@ -109,16 +109,14 @@ def main(items):
 
     line_segments, magnitudes = get_field_lines(items)
 
-    Graph.draw_lines(line_segments, convert_magnitudes_to_colors(magnitudes) if USE_COLORS else None)
+    Graph.draw_lines(line_segments)
     Graph.show_graph()
 
 
 if __name__ == '__main__':
     ITEMS = [
-        Item(True, Q_CONSTANT, Vector(0, 2)),
-        Item(True, 2 * Q_CONSTANT, Vector(0, -2)),
-        Item(False, Q_CONSTANT, Vector(-2, -2)),
-        Item(False, Q_CONSTANT, Vector(2, -2))
+        Item(False, Q_CONSTANT/2, Vector(-5, 0)),
+        Item(True, Q_CONSTANT/2, Vector(5, 0))
     ]
 
     main(ITEMS)

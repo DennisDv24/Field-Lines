@@ -5,7 +5,7 @@ import sys
 
 Q_CONSTANT = 1.602 * 10 ** (-19)
 MAGNITUDE_TO_RADIUS_FACTOR = 0.2 / Q_CONSTANT
-SIZE_OF_GRAPH = 5
+SIZE_OF_GRAPH = [10,5]
 
 
 class Vector:
@@ -36,14 +36,14 @@ class Vector:
         return f"({self.x}, {self.y})"
 
 
-class Item:
+class Item: #Def a charge
     def __init__(self, repels: bool, magnitude, position: Vector):
         self.repels = repels
         self.magnitude = magnitude
         self.position = position
 
     def get_radius(self):
-        return self.magnitude * MAGNITUDE_TO_RADIUS_FACTOR
+        return self.magnitude * MAGNITUDE_TO_RADIUS_FACTOR #radius proportional to charge value
 
     def is_position_inside_item(self, position: Vector) -> bool:
         return self.position.subtract(position).get_magnitude() < self.get_radius()
@@ -51,27 +51,28 @@ class Item:
 
 class Graph:
     axis = plt.gca()
-
+    axis.set_xticks([])
+    axis.set_yticks([])
     @staticmethod
     def is_within_borders(end_vector: Vector):
-        return -SIZE_OF_GRAPH < end_vector.x < SIZE_OF_GRAPH and -SIZE_OF_GRAPH < end_vector.y < SIZE_OF_GRAPH
-
+        return -SIZE_OF_GRAPH[0] < end_vector.x < SIZE_OF_GRAPH[0] and -SIZE_OF_GRAPH[0] < end_vector.y < SIZE_OF_GRAPH[0]
+                    #^Condition equiv to: return True if a<b<c
     @staticmethod
     def setup():
         axis = plt.gca()
-        axis.set_xlim((-SIZE_OF_GRAPH, SIZE_OF_GRAPH))
-        axis.set_ylim((-SIZE_OF_GRAPH, SIZE_OF_GRAPH))
+        axis.set_xlim((-SIZE_OF_GRAPH[0], SIZE_OF_GRAPH[0]))
+        axis.set_ylim((-SIZE_OF_GRAPH[1], SIZE_OF_GRAPH[1]))
         axis.set_aspect('equal')
 
     @staticmethod
     def draw_lines(lines_to_draw, colors=None):
-        line_collection = collections.LineCollection(lines_to_draw, colors=colors)
+        line_collection = collections.LineCollection(lines_to_draw, colors='b')
         Graph.axis.add_collection(line_collection)
 
     @staticmethod
     def draw_item(item):
-        circle = plt.Circle(item.position.get_tuple(), item.get_radius(),
-                            color="g" if item.repels else "r")
+        circle = plt.Circle(item.position.get_tuple(), 1,
+                            color="b")
 
         Graph.axis.add_artist(circle)
 
@@ -81,6 +82,9 @@ class Graph:
 
 
 def convert_to_rgba(minval, maxval, val, colors):
+    
+    """""
+
     # Modified from:
     # https://stackoverflow.com/questions/20792445/calculate-rgb-value-for-a-range-of-values-to-create-heat-map
     # "colors" is a series of RGB colors delineating a series of
@@ -100,7 +104,8 @@ def convert_to_rgba(minval, maxval, val, colors):
     else:  # Otherwise return a color within the range between them.
         (r1, g1, b1), (r2, g2, b2) = colors[i], colors[i + 1]
         return int(r1 + f * (r2 - r1)) / 255, int(g1 + f * (g2 - g1)) / 255, int(b1 + f * (b2 - b1)) / 255, 1
-
+    """""
+    pass 
 
 def convert_magnitudes_to_colors(magnitudes):
     def magnitude_to_radius(magnitude_to_convert):
